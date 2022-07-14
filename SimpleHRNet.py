@@ -109,7 +109,7 @@ class SimpleHRNet:
             if 'cuda' == str(self.device):
                 # if device is set to 'cuda', all available GPUs will be used
                 print("%d GPU(s) will be used" % torch.cuda.device_count())
-                # TODO LIST 여기도 실행 됨.
+                # TODO LIST
                 device_ids = None
             else:
                 # if device is set to 'cuda:IDS', only that/those device(s) will be used
@@ -132,7 +132,7 @@ class SimpleHRNet:
             ])
 
         else:
-            print("SimpleHRNet py파일에서 133번 라인까지 진행이 된다.")
+            # YOLO에서 인자 값 잘 못 들어가고 있음. > 수정
             self.detector = YOLOv3(model_def=yolo_model_def,
                                    class_path=yolo_class_path,
                                    weights_path=yolo_weights_path,
@@ -140,7 +140,7 @@ class SimpleHRNet:
                                    max_batch_size=self.max_batch_size,
                                    device=device,
                                    img_size=img_size)
-            print("SimpleHRNet py파일에서 140번 라인까지 진행이 된다.")  # 여기서 오류 뜸.
+
             self.transform = transforms.Compose([
                 transforms.ToPILImage(),
                 transforms.Resize((self.resolution[0], self.resolution[1])),  # (height, width)
@@ -180,7 +180,7 @@ class SimpleHRNet:
                     (heatmaps, bounding boxes, human joints)
         """
         if len(image.shape) == 3:
-            return self._predict_single(image)
+            return self._predict_single(image)     # 여기서 들어감.
 
         elif len(image.shape) == 4:
             return self._predict_batch(image)
@@ -212,7 +212,7 @@ class SimpleHRNet:
             heatmaps = np.zeros((nof_people, self.nof_joints, self.resolution[0] // 4, self.resolution[1] // 4),
                                 dtype=np.float32)
 
-            if detections is not None:
+            if detections is not None:     # detection에서 값을 잘 못 가지고 있음.
                 #for i, (x1, y1, x2, y2, conf, cls_conf, cls_pred) in enumerate(detections):
                 for i, (x1, y1, x2, y2, conf,  cls_pred) in enumerate(detections):
                     x1 = int(round(x1.item()))
